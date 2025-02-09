@@ -3,3 +3,8 @@
 2025-02-09T13:47:19.899138 - yoshi - World 1-1: success
 2025-02-09T13:47:19.899138 - toad - World 1-1: success
 2025-02-09T13:47:19.899138 - wario - World 1-1: failed
+2025-02-09T13:49:33.971480 - mario - World 1-2: failed
+2025-02-09T13:49:33.971480 - bowser - World 1-2: failed
+2025-02-09T13:49:33.971480 - yoshi - World 1-2: success
+2025-02-09T13:49:33.971480 - toad - World 1-2: success
+2025-02-09T13:49:33.971480 - wario - World 1-2: skipped (previous stage status: failed)
