@@ -1,11 +1,11 @@
 name,status,last_jobid,last_stage,last_updated
-Bowser,pending,,,
+Bowser,success,250209.141755,World 1-3,2025-02-09T14:20:25.829364
 DonkeyKong,pending,,,
-KoopaTroopa,pending,,,
-Luigi,pending,,,
-Mario,pending,,,
+KoopaTroopa,skipped,250209.141755,World 1-3,2025-02-09T14:20:25.829364
+Luigi,skipped,250209.140810,World 1-3,2025-02-09T14:10:18.545748
+Mario,skipped,250209.141755,World 1-3,2025-02-09T14:20:25.829364
 PrincessPeach,pending,,,
-Toad,pending,,,
+Toad,skipped,250209.140810,World 1-3,2025-02-09T14:10:18.545748
 Waluigi,pending,,,
-Wario,pending,,,
-Yoshi,pending,,,
+Wario,skipped,250209.140810,World 1-3,2025-02-09T14:10:18.545748
+Yoshi,skipped,250209.141755,World 1-3,2025-02-09T14:20:25.829364
