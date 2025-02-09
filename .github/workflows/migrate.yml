@@ -38,6 +38,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: feature/${{ needs.prepare.outputs.jobid }}
       - name: Run Stage 1
         run: |
           python scripts/run_migration.py \
@@ -47,19 +49,28 @@ jobs:
       - name: Upload stage results
         uses: actions/upload-artifact@v4
         with:
-          name: stage-results
+          name: stage1-results-${{ needs.prepare.outputs.jobid }}
           path: log/
           retention-days: 1
+      - name: Push Stage 1 Changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add log/
+          git commit -m "Stage 1 results for job ${{ needs.prepare.outputs.jobid }}"
+          git push origin feature/${{ needs.prepare.outputs.jobid }}
 
   stage2:
     needs: stage1
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: feature/${{ needs.prepare.outputs.jobid }}
       - name: Download previous results
         uses: actions/download-artifact@v4
         with:
-          name: stage-results
+          name: stage1-results-${{ needs.prepare.outputs.jobid }}
           path: log/
       - name: Run Stage 2
         run: |
@@ -70,19 +81,28 @@ jobs:
       - name: Upload stage results
         uses: actions/upload-artifact@v4
         with:
-          name: stage-results
+          name: stage2-results-${{ needs.prepare.outputs.jobid }}
           path: log/
           retention-days: 1
+      - name: Push Stage 2 Changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add log/
+          git commit -m "Stage 2 results for job ${{ needs.prepare.outputs.jobid }}"
+          git push origin feature/${{ needs.prepare.outputs.jobid }}
 
   stage3:
     needs: stage2
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: feature/${{ needs.prepare.outputs.jobid }}
       - name: Download previous results
         uses: actions/download-artifact@v4
         with:
-          name: stage-results
+          name: stage2-results-${{ needs.prepare.outputs.jobid }}
           path: log/
       - name: Run Stage 3
         run: |
@@ -93,9 +113,16 @@ jobs:
       - name: Upload stage results
         uses: actions/upload-artifact@v4
         with:
-          name: stage-results
+          name: stage3-results-${{ needs.prepare.outputs.jobid }}
           path: log/
           retention-days: 1
+      - name: Push Stage 3 Changes
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git add log/
+          git commit -m "Stage 3 results for job ${{ needs.prepare.outputs.jobid }}"
+          git push origin feature/${{ needs.prepare.outputs.jobid }}
 
   finalize:
     needs: [prepare, stage3]
@@ -104,6 +131,11 @@ jobs:
       - uses: actions/checkout@v2
         with:
           ref: feature/${{ needs.prepare.outputs.jobid }}
+      
+      - name: Download all stage results
+        uses: actions/download-artifact@v4
+        with:
+          path: log/
 
       - name: Update Results
         run: |
