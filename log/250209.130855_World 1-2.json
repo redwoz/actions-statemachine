@@ -1,0 +1,23 @@
+[
+  {
+    "name": "wario",
+    "status": "success",
+    "jobid": "250209.130855",
+    "stage": "World 1-2",
+    "timestamp": "2025-02-09T13:10:32.335389"
+  },
+  {
+    "name": "yoshi",
+    "status": "success",
+    "jobid": "250209.130855",
+    "stage": "World 1-2",
+    "timestamp": "2025-02-09T13:10:45.335532"
+  },
+  {
+    "name": "mario",
+    "status": "failed",
+    "jobid": "250209.130855",
+    "stage": "World 1-2",
+    "timestamp": "2025-02-09T13:11:05.335693"
+  }
+]
