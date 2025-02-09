@@ -1,0 +1,90 @@
+name: Migration Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      names:
+        description: 'Comma-separated list of names to migrate'
+        required: true
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Generate JobID and Create Branch
+        run: |
+          JOBID=$(date +%y%m%d.%H%M%S)
+          echo "JOBID=$JOBID" >> $GITHUB_ENV
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+          git checkout -b feature/$JOBID
+
+      - name: Prepare Migration Data
+        id: prepare
+        run: |
+          python scripts/prepare_migration.py \
+            --names "${{ github.event.inputs.names }}" \
+            --jobid "${{ env.JOBID }}" > migration_data.json
+          echo "::set-output name=data::$(cat migration_data.json)"
+
+      - name: Run Stage 1
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'stage1.yml',
+              ref: 'main',
+              inputs: {
+                migration_data: '${{ steps.prepare.outputs.data }}'
+              }
+            })
+
+      - name: Run Stage 2
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'stage2.yml',
+              ref: 'main',
+              inputs: {
+                migration_data: '${{ steps.prepare.outputs.data }}'
+              }
+            })
+
+      - name: Run Stage 3
+        uses: actions/github-script@v6
+        with:
+          script: |
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'stage3.yml',
+              ref: 'main',
+              inputs: {
+                migration_data: '${{ steps.prepare.outputs.data }}'
+              }
+            })
+
+      - name: Update Results
+        run: |
+          python scripts/update_results.py \
+            --jobid "${{ env.JOBID }}" \
+            --names "${{ github.event.inputs.names }}"
+
+      - name: Push Changes
+        run: |
+          git add log/
+          git commit -m "Migration results for job ${{ env.JOBID }}"
+          git push origin feature/${{ env.JOBID }}
+          gh pr create --base main --title "Migration ${{ env.JOBID }}" --body "Migration results"

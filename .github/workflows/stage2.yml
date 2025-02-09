@@ -1,0 +1,19 @@
+name: Migration Stage 2
+
+on:
+  workflow_dispatch:
+    inputs:
+      migration_data:
+        description: 'Migration data in JSON format'
+        required: true
+
+jobs:
+  world-1-2:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run Stage 2
+        run: |
+          python scripts/stage_runner.py \
+            --stage "World 1-2" \
+            --data '${{ inputs.migration_data }}'
