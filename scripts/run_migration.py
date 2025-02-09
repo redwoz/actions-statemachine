@@ -13,6 +13,26 @@ def run_stage(name, stage):
     time.sleep(delay)
     return random.random() > 0.33  # 66% success rate per item
 
+def get_previous_stage_status(jobid, name, current_stage):
+    """Get status of previous stage for a migration item."""
+    stages = ['World 1-1', 'World 1-2', 'World 1-3']
+    current_index = stages.index(current_stage)
+    
+    if current_index == 0:
+        return 'success'  # First stage always runs
+    
+    previous_stage = stages[current_index - 1]
+    try:
+        with open(f'log/{jobid}_{previous_stage}.json', 'r') as f:
+            results = json.load(f)
+            for result in results:
+                if result['name'] == name:
+                    return result['status']
+    except FileNotFoundError:
+        return 'unknown'
+    
+    return 'unknown'
+
 def main():
     names = sys.argv[1].split(',')
     jobid = sys.argv[2]
@@ -20,22 +40,21 @@ def main():
     
     Path('log').mkdir(exist_ok=True)
     
-    # Load previous stage results if not first stage
-    successful_items = set(names)
-    
     # Process current stage
     results = []
     timestamp = datetime.now().isoformat()
     
     with open(f'log/{jobid}.log', 'a') as logfile:
         for name in names:
-            if name in successful_items:
+            previous_status = get_previous_stage_status(jobid, name, current_stage)
+            
+            if previous_status == 'success':
                 success = run_stage(name, current_stage)
                 status = 'success' if success else 'failed'
                 logfile.write(f'{timestamp} - {name} - {current_stage}: {status}\n')
             else:
                 status = 'skipped'
-                logfile.write(f'{timestamp} - {name} - {current_stage}: skipped (failed in previous stage)\n')
+                logfile.write(f'{timestamp} - {name} - {current_stage}: skipped (previous stage status: {previous_status})\n')
             
             results.append({
                 'name': name,
