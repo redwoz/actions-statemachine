@@ -1,0 +1,5 @@
+name,status,last_jobid,last_stage,last_updated
+mario,failed,250209.143029,World 1-1,2025-02-09T14:30:42.023706
+luigi,failed,250209.143029,World 1-1,2025-02-09T14:30:42.023706
+toad,success,250209.143029,World 1-1,2025-02-09T14:30:42.023706
+wario,success,250209.143029,World 1-1,2025-02-09T14:30:42.023706

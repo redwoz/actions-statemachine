@@ -1,0 +1,30 @@
+[
+  {
+    "name": "mario",
+    "status": "failed",
+    "jobid": "250209.143029",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:30:42.023706"
+  },
+  {
+    "name": "luigi",
+    "status": "failed",
+    "jobid": "250209.143029",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:30:42.023706"
+  },
+  {
+    "name": "toad",
+    "status": "success",
+    "jobid": "250209.143029",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:30:42.023706"
+  },
+  {
+    "name": "wario",
+    "status": "success",
+    "jobid": "250209.143029",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:30:42.023706"
+  }
+]
