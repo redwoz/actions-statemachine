@@ -8,20 +8,19 @@ on:
         required: true
 
 jobs:
-  migrate:
+  prepare:
     runs-on: ubuntu-latest
+    outputs:
+      jobid: ${{ steps.setup.outputs.jobid }}
+      migration_data: ${{ steps.prepare.outputs.data }}
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
-
-      - name: Generate JobID and Create Branch
+      
+      - name: Setup
+        id: setup
         run: |
           JOBID=$(date +%y%m%d.%H%M%S)
-          echo "JOBID=$JOBID" >> $GITHUB_ENV
+          echo "jobid=$JOBID" >> $GITHUB_OUTPUT
           git config --global user.name 'GitHub Actions'
           git config --global user.email 'actions@github.com'
           git checkout -b feature/$JOBID
@@ -31,60 +30,87 @@ jobs:
         run: |
           python scripts/prepare_migration.py \
             --names "${{ github.event.inputs.names }}" \
-            --jobid "${{ env.JOBID }}" > migration_data.json
-          echo "::set-output name=data::$(cat migration_data.json)"
+            --jobid "${{ steps.setup.outputs.jobid }}" > migration_data.json
+          echo "data=$(cat migration_data.json)" >> $GITHUB_OUTPUT
 
+  stage1:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       - name: Run Stage 1
-        uses: actions/github-script@v6
+        run: |
+          python scripts/run_migration.py \
+            "${{ github.event.inputs.names }}" \
+            "${{ needs.prepare.outputs.jobid }}" \
+            "World 1-1"
+      - name: Upload stage results
+        uses: actions/upload-artifact@v2
         with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'stage1.yml',
-              ref: 'main',
-              inputs: {
-                migration_data: '${{ steps.prepare.outputs.data }}'
-              }
-            })
+          name: stage-results
+          path: log/
 
+  stage2:
+    needs: stage1
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download previous results
+        uses: actions/download-artifact@v2
+        with:
+          name: stage-results
+          path: log/
       - name: Run Stage 2
-        uses: actions/github-script@v6
+        run: |
+          python scripts/run_migration.py \
+            "${{ github.event.inputs.names }}" \
+            "${{ needs.prepare.outputs.jobid }}" \
+            "World 1-2"
+      - name: Upload stage results
+        uses: actions/upload-artifact@v2
         with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'stage2.yml',
-              ref: 'main',
-              inputs: {
-                migration_data: '${{ steps.prepare.outputs.data }}'
-              }
-            })
+          name: stage-results
+          path: log/
 
-      - name: Run Stage 3
-        uses: actions/github-script@v6
+  stage3:
+    needs: stage2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Download previous results
+        uses: actions/download-artifact@v2
         with:
-          script: |
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'stage3.yml',
-              ref: 'main',
-              inputs: {
-                migration_data: '${{ steps.prepare.outputs.data }}'
-              }
-            })
+          name: stage-results
+          path: log/
+      - name: Run Stage 3
+        run: |
+          python scripts/run_migration.py \
+            "${{ github.event.inputs.names }}" \
+            "${{ needs.prepare.outputs.jobid }}" \
+            "World 1-3"
+      - name: Upload stage results
+        uses: actions/upload-artifact@v2
+        with:
+          name: stage-results
+          path: log/
+
+  finalize:
+    needs: [prepare, stage3]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: feature/${{ needs.prepare.outputs.jobid }}
 
       - name: Update Results
         run: |
           python scripts/update_results.py \
-            --jobid "${{ env.JOBID }}" \
+            --jobid "${{ needs.prepare.outputs.jobid }}" \
             --names "${{ github.event.inputs.names }}"
 
       - name: Push Changes
         run: |
           git add log/
-          git commit -m "Migration results for job ${{ env.JOBID }}"
-          git push origin feature/${{ env.JOBID }}
-          gh pr create --base main --title "Migration ${{ env.JOBID }}" --body "Migration results"
+          git commit -m "Migration results for job ${{ needs.prepare.outputs.jobid }}"
+          git push origin feature/${{ needs.prepare.outputs.jobid }}
+          gh pr create --base main --title "Migration ${{ needs.prepare.outputs.jobid }}" --body "Migration results"
