@@ -178,10 +178,17 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git fetch origin main
-          git checkout main
-          git merge --no-ff feature/${{ needs.prepare.outputs.jobid }} -m "Merge migration job ${{ needs.prepare.outputs.jobid }}"
-          git push origin main
-          git push origin --delete feature/${{ needs.prepare.outputs.jobid }}
+          
+          # Create Pull Request
+          gh pr create --base main --head feature/${{ needs.prepare.outputs.jobid }} --title "Merge migration job ${{ needs.prepare.outputs.jobid }}" --body "Automated merge of migration job ${{ needs.prepare.outputs.jobid }}"
+          
+          # Get Pull Request Number
+          PR_NUMBER=$(gh pr list --base main --head feature/${{ needs.prepare.outputs.jobid }} --json number --jq '.[0].number')
+          
+          # Approve Pull Request
+          gh pr review $PR_NUMBER --approve
+          
+          # Merge Pull Request
+          gh pr merge $PR_NUMBER --merge
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
