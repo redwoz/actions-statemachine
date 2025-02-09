@@ -1,0 +1,12 @@
+2025-02-09T13:36:48.181535 - mario - World 1-1: failed
+2025-02-09T13:36:48.181535 - toad - World 1-1: success
+2025-02-09T13:36:48.181535 - wario - World 1-1: success
+2025-02-09T13:36:48.181535 - yoshi - World 1-1: success
+2025-02-09T13:38:38.672606 - mario - World 1-2: skipped (previous stage status: failed)
+2025-02-09T13:38:38.672606 - toad - World 1-2: failed
+2025-02-09T13:38:38.672606 - wario - World 1-2: failed
+2025-02-09T13:38:38.672606 - yoshi - World 1-2: failed
+2025-02-09T13:39:37.905427 - mario - World 1-3: skipped (previous stage status: skipped)
+2025-02-09T13:39:37.905427 - toad - World 1-3: skipped (previous stage status: failed)
+2025-02-09T13:39:37.905427 - wario - World 1-3: skipped (previous stage status: failed)
+2025-02-09T13:39:37.905427 - yoshi - World 1-3: skipped (previous stage status: failed)
