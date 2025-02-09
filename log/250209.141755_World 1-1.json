@@ -1,0 +1,30 @@
+[
+  {
+    "name": "bowser",
+    "status": "success",
+    "jobid": "250209.141755",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:18:06.925558"
+  },
+  {
+    "name": "mario",
+    "status": "failed",
+    "jobid": "250209.141755",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:18:06.925558"
+  },
+  {
+    "name": "yoshi",
+    "status": "failed",
+    "jobid": "250209.141755",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:18:06.925558"
+  },
+  {
+    "name": "koopatroopa",
+    "status": "failed",
+    "jobid": "250209.141755",
+    "stage": "World 1-1",
+    "timestamp": "2025-02-09T14:18:06.925558"
+  }
+]
