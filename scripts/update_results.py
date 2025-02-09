@@ -56,10 +56,15 @@ def main():
     
     # Update migrations with latest results
     for name, result in latest_results.items():
-        if name in migrations:
-            migrations[name].update({
+        # Find matching name case-insensitively
+        matching_name = next(
+            (n for n in migrations.keys() if n.lower() == name.lower()),
+            None
+        )
+        if matching_name:
+            migrations[matching_name].update({
                 'status': result['status'],
-                'last_jobid': result['last_jobid'],
+                'last_jobid': result['last_jobid'], 
                 'last_stage': result['last_stage'],
                 'last_updated': result['timestamp']
             })
