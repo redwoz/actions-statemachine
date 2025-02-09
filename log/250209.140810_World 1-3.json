@@ -1,0 +1,30 @@
+[
+  {
+    "name": "toad",
+    "status": "skipped",
+    "jobid": "250209.140810",
+    "stage": "World 1-3",
+    "timestamp": "2025-02-09T14:10:18.545748"
+  },
+  {
+    "name": "bowser",
+    "status": "skipped",
+    "jobid": "250209.140810",
+    "stage": "World 1-3",
+    "timestamp": "2025-02-09T14:10:18.545748"
+  },
+  {
+    "name": "wario",
+    "status": "skipped",
+    "jobid": "250209.140810",
+    "stage": "World 1-3",
+    "timestamp": "2025-02-09T14:10:18.545748"
+  },
+  {
+    "name": "luigi",
+    "status": "skipped",
+    "jobid": "250209.140810",
+    "stage": "World 1-3",
+    "timestamp": "2025-02-09T14:10:18.545748"
+  }
+]

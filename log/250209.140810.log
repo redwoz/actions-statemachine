@@ -1,0 +1,12 @@
+2025-02-09T14:08:23.935276 - toad - World 1-1: failed
+2025-02-09T14:08:23.935276 - bowser - World 1-1: failed
+2025-02-09T14:08:23.935276 - wario - World 1-1: failed
+2025-02-09T14:08:23.935276 - luigi - World 1-1: failed
+2025-02-09T14:10:05.733659 - toad - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:10:05.733659 - bowser - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:10:05.733659 - wario - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:10:05.733659 - luigi - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:10:18.545748 - toad - World 1-3: skipped (previous stage status: skipped)
+2025-02-09T14:10:18.545748 - bowser - World 1-3: skipped (previous stage status: skipped)
+2025-02-09T14:10:18.545748 - wario - World 1-3: skipped (previous stage status: skipped)
+2025-02-09T14:10:18.545748 - luigi - World 1-3: skipped (previous stage status: skipped)
