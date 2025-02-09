@@ -166,31 +166,21 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      pull-requests: write
     steps:
       - uses: actions/checkout@v2
         with:
           ref: feature/${{ needs.prepare.outputs.jobid }}
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
       
-      - name: Download all stage results
-        uses: actions/download-artifact@v4
-        with:
-          path: log/
-
-      - name: Update Results
-        run: |
-          python scripts/update_results.py \
-            --jobid "${{ needs.prepare.outputs.jobid }}" \
-            --names "${{ github.event.inputs.names }}"
-
-      - name: Push Changes
+      - name: Merge to main
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
-          git add log/
-          git commit -m "Migration results for job ${{ needs.prepare.outputs.jobid }}"
-          git push origin feature/${{ needs.prepare.outputs.jobid }}
-          gh pr create --base main --title "Migration ${{ needs.prepare.outputs.jobid }}" --body "Migration results"
+          git fetch origin main
+          git checkout main
+          git merge --no-ff feature/${{ needs.prepare.outputs.jobid }} -m "Merge migration job ${{ needs.prepare.outputs.jobid }}"
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,4 +1,3 @@
-# .github/workflows/autoupdate.yml
 name: Auto Update Migrations
 
 on:
@@ -6,18 +5,31 @@ on:
     branches:
       - main
     paths:
-      - 'log/*.csv'
+      - 'log/*.json'
 
 jobs:
   update:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Update Migrations
-        run: python scripts/update_migrations.py
+      - name: Update Migrations CSV
+        run: |
+          python scripts/update_results.py \
+            --log-dir "log" \
+            --output "migrations.csv"
+
+      - name: Commit Updates
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add migrations.csv
+          git commit -m "Update migrations status from latest job results"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
