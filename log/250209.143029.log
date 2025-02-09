@@ -2,3 +2,7 @@
 2025-02-09T14:30:42.023706 - luigi - World 1-1: failed
 2025-02-09T14:30:42.023706 - toad - World 1-1: success
 2025-02-09T14:30:42.023706 - wario - World 1-1: success
+2025-02-09T14:32:21.415411 - mario - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:32:21.415411 - luigi - World 1-2: skipped (previous stage status: failed)
+2025-02-09T14:32:21.415411 - toad - World 1-2: failed
+2025-02-09T14:32:21.415411 - wario - World 1-2: success
