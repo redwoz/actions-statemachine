@@ -45,10 +45,11 @@ jobs:
             "${{ needs.prepare.outputs.jobid }}" \
             "World 1-1"
       - name: Upload stage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: stage-results
           path: log/
+          retention-days: 1
 
   stage2:
     needs: stage1
@@ -56,7 +57,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Download previous results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: stage-results
           path: log/
@@ -67,10 +68,11 @@ jobs:
             "${{ needs.prepare.outputs.jobid }}" \
             "World 1-2"
       - name: Upload stage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: stage-results
           path: log/
+          retention-days: 1
 
   stage3:
     needs: stage2
@@ -78,7 +80,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Download previous results
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: stage-results
           path: log/
@@ -89,10 +91,11 @@ jobs:
             "${{ needs.prepare.outputs.jobid }}" \
             "World 1-3"
       - name: Upload stage results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: stage-results
           path: log/
+          retention-days: 1
 
   finalize:
     needs: [prepare, stage3]
