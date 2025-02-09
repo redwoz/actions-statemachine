@@ -1,9 +1,14 @@
-name: Auto Update Migrations
+name: Update Results
 
 on:
   pull_request:
     types:
       - closed
+    branches:
+      - main
+    paths:
+      - 'log/*.json'
+  push:
     branches:
       - main
     paths:
