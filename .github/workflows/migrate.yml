@@ -45,6 +45,8 @@ jobs:
   stage1:
     needs: prepare
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
         with:
@@ -64,15 +66,20 @@ jobs:
           retention-days: 1
       - name: Push Stage 1 Changes
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add log/
           git commit -m "Stage 1 results for job ${{ needs.prepare.outputs.jobid }}"
           git push origin feature/${{ needs.prepare.outputs.jobid }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stage2:
     needs: stage1
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
         with:
@@ -96,15 +103,20 @@ jobs:
           retention-days: 1
       - name: Push Stage 2 Changes
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add log/
           git commit -m "Stage 2 results for job ${{ needs.prepare.outputs.jobid }}"
           git push origin feature/${{ needs.prepare.outputs.jobid }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   stage3:
     needs: stage2
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v2
         with:
@@ -128,15 +140,21 @@ jobs:
           retention-days: 1
       - name: Push Stage 3 Changes
         run: |
-          git config --global user.name 'GitHub Actions'
-          git config --global user.email 'actions@github.com'
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add log/
           git commit -m "Stage 3 results for job ${{ needs.prepare.outputs.jobid }}"
           git push origin feature/${{ needs.prepare.outputs.jobid }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   finalize:
     needs: [prepare, stage3]
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
     steps:
       - uses: actions/checkout@v2
         with:
@@ -155,7 +173,12 @@ jobs:
 
       - name: Push Changes
         run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
           git add log/
           git commit -m "Migration results for job ${{ needs.prepare.outputs.jobid }}"
           git push origin feature/${{ needs.prepare.outputs.jobid }}
           gh pr create --base main --title "Migration ${{ needs.prepare.outputs.jobid }}" --body "Migration results"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
