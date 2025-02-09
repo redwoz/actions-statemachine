@@ -2,4 +2,4 @@ name,status,last_jobid,last_stage,last_updated
 mario,failed,250209.143029,World 1-1,2025-02-09T14:30:42.023706
 luigi,failed,250209.143029,World 1-1,2025-02-09T14:30:42.023706
 toad,failed,250209.143029,World 1-2,2025-02-09T14:32:21.415411
-wario,success,250209.143029,World 1-2,2025-02-09T14:32:21.415411
+wario,failed,250209.143029,World 1-3,2025-02-09T14:32:56.952445
