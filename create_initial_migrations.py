@@ -3,7 +3,7 @@ import csv
 from datetime import datetime
 
 characters = [
-    "Mario", "Luigi", "Princess Peach", "Bowser", "Yoshi",
+    "Mario", "Luigi", "PrincessPeach", "Bowser", "Yoshi",
     "Toad", "Wario", "Waluigi", "DonkeyKong", "KoopaTroopa"
 ]
 
