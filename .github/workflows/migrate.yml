@@ -182,5 +182,6 @@ jobs:
           git checkout main
           git merge --no-ff feature/${{ needs.prepare.outputs.jobid }} -m "Merge migration job ${{ needs.prepare.outputs.jobid }}"
           git push origin main
+          git push origin --delete feature/${{ needs.prepare.outputs.jobid }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
