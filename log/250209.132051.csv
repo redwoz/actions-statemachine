@@ -1,0 +1,5 @@
+name,status,last_jobid,last_stage,last_updated
+yoshi,success,250209.132051,World 1-1,2025-02-09T13:21:01.884030
+toad,failed,250209.132051,World 1-1,2025-02-09T13:21:01.884030
+mario,failed,250209.132051,World 1-1,2025-02-09T13:21:01.884030
+bowser,success,250209.132051,World 1-1,2025-02-09T13:21:01.884030
